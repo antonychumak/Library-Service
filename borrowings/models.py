@@ -1,7 +1,9 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
+
 from books.models import Book
+from library_service import settings
 from users.models import User
 
 
@@ -9,8 +11,32 @@ class Borrowing(models.Model):
     borrow_date = models.DateField(auto_now_add=True)
     expected_return_date = models.DateField()
     actual_return_date = models.DateField()
-    book = models.ForeignKey(Book, on_delete=models.PROTECT, verbose_name="books")
-    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="users")
+    book = models.ForeignKey(
+        Book, on_delete=models.SET("expect delivery"), verbose_name="books"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="users"
+    )
 
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.book}"
+        return f"{self.user} - {self.book}"
+
+
+class Payment:
+    class StatusChoices(models.TextChoices):
+        PENDING = "Pending"
+        PAID = "PAID"
+
+    class TapeChoices(models.TextChoices):
+        PAYMENT = "Payment"
+        FINE = "Fine"
+
+    session_url = models.URLField
+    session = models.CharField()
+    money_to_pay = models.DecimalField(
+        validators=[MinValueValidator(0)],
+        max_digits=4,
+        decimal_places=2,
+        verbose_name="Money to pay",
+    )
+    borrowing = models.ForeignKey(Borrowing, on_delete=models.CASCADE)

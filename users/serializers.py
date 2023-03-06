@@ -1,8 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from borrowings.models import Borrowing
+
 
 class UserSerializer(serializers.ModelSerializer):
+    borrowings = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Borrowing.objects.all()
+    )
+
     class Meta:
         model = get_user_model()
         fields = ("id", "email", "password", "is_staff")
