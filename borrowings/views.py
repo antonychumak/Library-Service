@@ -9,12 +9,15 @@ from rest_framework.viewsets import GenericViewSet
 
 from borrowings.models import Borrowing
 from borrowings.permissions import IsAdminOrIfAuthenticatedReadOnly
-from borrowings.serializers import BorrowingSerializer
+from borrowings.serializers import (
+    BorrowDetailSerializer,
+    BorrowingListSerializer,
+)
 
 
 class BorrowingList(generics.ListCreateAPIView):
-    queryset = Borrowing.objects.all()
-    serializer_class = BorrowingSerializer
+    queryset = Borrowing.objects.select_related("book", "user")
+    serializer_class = BorrowingListSerializer
     permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
 
     def perform_create(self, serializer):
@@ -22,6 +25,6 @@ class BorrowingList(generics.ListCreateAPIView):
 
 
 class BorrowingDetail(generics.RetrieveUpdateAPIView):
-    queryset = Borrowing.objects.all()
-    serializer_class = BorrowingSerializer
+    queryset = Borrowing.objects.select_related("user", "book")
+    serializer_class = BorrowDetailSerializer
     permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
