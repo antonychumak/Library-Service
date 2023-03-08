@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from rest_framework import generics, mixins, viewsets
 from rest_framework.permissions import (
@@ -5,26 +6,33 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
-from rest_framework.viewsets import GenericViewSet
 
 from borrowings.models import Borrowing
 from borrowings.permissions import IsAdminOrIfAuthenticatedReadOnly
 from borrowings.serializers import (
-    BorrowDetailSerializer,
     BorrowingListSerializer,
+    BorrowingSerializer,
 )
 
 
-class BorrowingList(generics.ListCreateAPIView):
-    queryset = Borrowing.objects.select_related("book", "user")
-    serializer_class = BorrowingListSerializer
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
+class BorrowingViewSet(viewsets.ModelViewSet):
+    queryset = Borrowing.objects.select_related("user").prefetch_related("book")
+    permission_classes = [
+        IsAdminOrIfAuthenticatedReadOnly,
+    ]
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def get_serializer_class(self):
+        if self.action == "list":
+            return BorrowingListSerializer
 
+        return BorrowingSerializer
 
-class BorrowingDetail(generics.RetrieveUpdateAPIView):
-    queryset = Borrowing.objects.select_related("user", "book")
-    serializer_class = BorrowDetailSerializer
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
+    def get_queryset(self):
+        """Only allow admin or owners of an object to edit it."""
+
+        queryset = self.queryset
+
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(user=self.request.user.id)
+
+        return queryset
