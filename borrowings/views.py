@@ -12,6 +12,7 @@ from borrowings.permissions import IsAdminOrIfAuthenticatedReadOnly
 from borrowings.serializers import (
     BorrowingListSerializer,
     BorrowingSerializer,
+    BorrowingDetailSerializer,
 )
 
 
@@ -24,6 +25,8 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return BorrowingListSerializer
+        if self.action == "retrieve":
+            return BorrowingDetailSerializer
 
         return BorrowingSerializer
 

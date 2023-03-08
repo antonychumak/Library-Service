@@ -8,7 +8,7 @@ from users.models import User
 
 
 class Borrowing(models.Model):
-    borrow_date = models.DateField(auto_now_add=True)
+    borrow_date = models.DateField()
     expected_return_date = models.DateField()
     actual_return_date = models.DateField()
     book = models.ManyToManyField(Book, related_name="borrows")
