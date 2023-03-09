@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -21,7 +22,16 @@ class Book(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    @staticmethod
+    def validate_inventory(inventory: int, error_to_raise):
+        if inventory <= 0:
+            raise error_to_raise("This book is not currently available.")
+
+    def clean(self):
+        Book.validate_inventory(self.inventory, ValidationError)
+
     class Meta:
         ordering = [
             "title",
         ]
+        unique_together = ("title", "author")
