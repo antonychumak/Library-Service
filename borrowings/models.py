@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 
 from django.core.exceptions import ValidationError
@@ -11,10 +12,10 @@ from users.models import User
 
 
 class Borrowing(models.Model):
-    borrow_date = models.DateField(auto_created=True)
+    borrow_date = models.DateField(auto_now=True)
     expected_return_date = models.DateField()
     actual_return_date = models.DateField()
-    book = models.ManyToManyField(Book, related_name="borrows")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="users"
     )
@@ -23,9 +24,8 @@ class Borrowing(models.Model):
         return f"{self.actual_return_date} - {self.expected_return_date}"
 
     @staticmethod
-    def validate_date(
-        borrow_date, expected_return_date, actual_return_date, error_to_raise
-    ):
+    def validate_date(expected_return_date, actual_return_date, error_to_raise):
+        borrow_date = datetime.date.today()
         fourteen_days = timedelta(14)
         day_in_user = actual_return_date - borrow_date
         overdue_days = actual_return_date - expected_return_date
@@ -50,7 +50,7 @@ class Borrowing(models.Model):
         )
 
     class Meta:
-        ordering = ["expected_return_date"]
+        ordering = ("id",)
 
 
 class Payment:

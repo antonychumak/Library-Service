@@ -7,6 +7,7 @@ from borrowings.views import BorrowingViewSet
 router = routers.DefaultRouter()
 router.register("borrowing", BorrowingViewSet, basename="borrow")
 
+
 urlpatterns = [
     path("", include(router.urls)),
 ]

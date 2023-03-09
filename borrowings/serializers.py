@@ -8,35 +8,46 @@ from books.serializers import BookSerializer
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
+    inventory_book = serializers.ReadOnlyField(source="book.inventory", read_only=True)
+    borrow_date = serializers.DateField(read_only=True)
+
     class Meta:
         model = Borrowing
         fields = (
             "id",
             "borrow_date",
-            "expected_return_date",
             "actual_return_date",
+            "expected_return_date",
             "book",
             "user",
+            "inventory_book",
         )
 
     def validate(self, attrs):
         data = super(BorrowingSerializer, self).validate(attrs)
         Borrowing.validate_date(
-            attrs["borrow_date"],
             attrs["expected_return_date"],
             attrs["actual_return_date"],
             ValidationError,
         )
+        if attrs["book"].inventory <= 0:
+            raise ValidationError({"Book inventory is empty"})
         return data
+
+    def create(self, validated_data: dict):
+        book = validated_data["book"]
+        book.inventory -= 1
+        book.save()
+        return super().create(validated_data)
 
 
 class BorrowingListSerializer(BorrowingSerializer):
-    book = serializers.SlugRelatedField(many=True, read_only=True, slug_field="title")
+    book = serializers.SlugRelatedField(many=False, read_only=True, slug_field="title")
     user = serializers.ReadOnlyField(source="user.full_name", read_only=True)
 
 
 class BorrowingDetailSerializer(BorrowingSerializer):
-    book = BookSerializer(many=True, read_only=True)
+    book = BookSerializer(many=False, read_only=True)
     user_full_name = serializers.ReadOnlyField(source="user.full_name", read_only=True)
     user_email = serializers.ReadOnlyField(source="user.email", read_only=True)
 
@@ -50,4 +61,5 @@ class BorrowingDetailSerializer(BorrowingSerializer):
             "book",
             "user_full_name",
             "user_email",
+            "inventory_book",
         )
