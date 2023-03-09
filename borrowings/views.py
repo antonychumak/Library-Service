@@ -1,11 +1,4 @@
-from django.contrib.auth import get_user_model
-from django.shortcuts import render
-from rest_framework import generics, mixins, viewsets
-from rest_framework.permissions import (
-    IsAdminUser,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
+from rest_framework import viewsets
 
 from borrowings.models import Borrowing
 from borrowings.permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -21,6 +14,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAdminOrIfAuthenticatedReadOnly,
     ]
+    filterset_fields = ["user"]
 
     def get_serializer_class(self):
         if self.action == "list":

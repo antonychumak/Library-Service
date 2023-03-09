@@ -49,6 +49,9 @@ class Borrowing(models.Model):
             ValidationError,
         )
 
+    class Meta:
+        ordering = ["expected_return_date"]
+
 
 class Payment:
     class StatusChoices(models.TextChoices):
@@ -68,3 +71,6 @@ class Payment:
         verbose_name="Money to pay",
     )
     borrowing = models.ForeignKey(Borrowing, on_delete=models.CASCADE)
+
+    class Meta:
+        order_with_respect_to = "borrowing"

@@ -27,22 +27,6 @@ class BorrowingSerializer(serializers.ModelSerializer):
             attrs["actual_return_date"],
             ValidationError,
         )
-
-        # fourteen_days = timedelta(14)
-        # day_in_user = attrs["actual_return_date"] - attrs["borrow_date"]
-        # overdue_days = attrs["actual_return_date"] - attrs["expected_return_date"]
-        # deadline_date = attrs["borrow_date"] + fourteen_days
-        # if day_in_user > fourteen_days:
-        #     raise ValidationError(
-        #         f"You cannot borrow a book for more than {fourteen_days} days, deadline: {deadline_date}"
-        #     )
-        # if attrs["expected_return_date"] > deadline_date:
-        #     raise ValidationError(f"Last day to return book: {deadline_date}")
-        # if attrs["actual_return_date"] > attrs["expected_return_date"]:
-        #     raise ValidationError(f"You are late with your book for {overdue_days}")
-        # if attrs["actual_return_date"] < attrs["borrow_date"]:
-        #     raise ValidationError(f"return date is incorrect")
-
         return data
 
 
