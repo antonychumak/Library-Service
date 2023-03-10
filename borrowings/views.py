@@ -23,7 +23,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     ]
     filterset_fields = ["user", "is_active"]
 
-    def create(self, request: Request, *args: tuple, **kwargs: dict):
+    def create(self, request: Request, *args: tuple, **kwargs: dict) -> Response:
         serializer = self.get_serializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
