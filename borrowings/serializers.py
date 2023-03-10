@@ -16,25 +16,24 @@ class BorrowingSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "borrow_date",
-            "actual_return_date",
             "expected_return_date",
             "book",
             "user",
             "inventory_book",
+            "is_active",
         )
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict) -> dict:
         data = super(BorrowingSerializer, self).validate(attrs)
         Borrowing.validate_date(
             attrs["expected_return_date"],
-            attrs["actual_return_date"],
             ValidationError,
         )
         if attrs["book"].inventory <= 0:
             raise ValidationError({"Book inventory is empty"})
         return data
 
-    def create(self, validated_data: dict):
+    def create(self, validated_data: dict) -> dict:
         book = validated_data["book"]
         book.inventory -= 1
         book.save()
@@ -57,9 +56,9 @@ class BorrowingDetailSerializer(BorrowingSerializer):
             "id",
             "borrow_date",
             "expected_return_date",
-            "actual_return_date",
             "book",
             "user_full_name",
             "user_email",
             "inventory_book",
+            "is_active",
         )

@@ -1,6 +1,10 @@
+from typing import Type
+
+from django.db.models import QuerySet
 from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from borrowings.models import Borrowing
 from borrowings.permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -17,7 +21,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAdminOrIfAuthenticatedReadOnly,
     ]
-    filterset_fields = ["user"]
+    filterset_fields = ["user", "is_active"]
 
     def create(self, request: Request, *args: tuple, **kwargs: dict):
         serializer = self.get_serializer(data=request.data)
@@ -27,7 +31,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response({"Order created successfully"})
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> Type[Serializer]:
         if self.action == "list":
             return BorrowingListSerializer
         if self.action == "retrieve":
@@ -35,7 +39,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
         return BorrowingSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """Only allow admin or owners of an object to edit it."""
 
         queryset = self.queryset
@@ -45,5 +49,5 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         serializer.save(user=self.request.user)
