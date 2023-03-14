@@ -2,7 +2,6 @@ import datetime
 from datetime import timedelta
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -12,56 +11,59 @@ from users.models import User
 
 
 class Borrowing(models.Model):
-    borrow_date = models.DateField(auto_now=True)
+    borrow_date = models.DateField(auto_now_add=True)
     expected_return_date = models.DateField()
-    actual_return_date = models.DateField()
+    actual_return_date = models.DateField(default=datetime.date.today)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="users"
     )
     is_active = models.BooleanField(default=True)
+    borrow_cost = models.DecimalField(
+        decimal_places=2, max_digits=4, null=True, blank=True
+    )
 
     def __str__(self):
-        return f"{self.actual_return_date} - {self.expected_return_date}"
+        return f"{self.borrow_date} - {self.expected_return_date} - {self.actual_return_date}"
 
     @staticmethod
-    def validate_date(expected_return_date, error_to_raise):
+    def validate_date(expected_return_date, actual_return_date, error_to_raise) -> None:
+        print("validate MODEL")
         borrow_date = datetime.date.today()
         fourteen_days = timedelta(14)
         deadline_date = borrow_date + fourteen_days
+        day_in_user = actual_return_date - borrow_date
+        if day_in_user > fourteen_days:
+            raise error_to_raise("Your borrowings overdue")
         if expected_return_date < borrow_date:
-            raise error_to_raise(f"Check if the entered date is correct")
+            raise error_to_raise("Check if the entered date is correct")
         if expected_return_date > deadline_date:
             raise error_to_raise(f"Last day to return book: {deadline_date}")
 
+    @staticmethod
+    def validate_is_active(is_active, error_to_raise) -> None:
+        print("validate is_active model")
+        print(is_active)
+        if is_active:
+            raise error_to_raise("Your borrowing already close")
+
     def clean(self):
+        print("clean MODEL")
         Borrowing.validate_date(
             self.expected_return_date,
+            self.actual_return_date,
             ValidationError,
         )
 
+    # def borrowing_cost(self):
+    #     if self.actual_return_date == self.borrow_date:
+    #         cost_borrow = self.book.daily_fee
+    #     else:
+    #         days_in_borrow = self.actual_return_date - self.borrow_date
+    #         print(days_in_borrow)
+    #         cost_borrow = days_in_borrow.days * self.book.daily_fee
+    #         print(cost_borrow)
+    #     return cost_borrow
+
     class Meta:
         ordering = ("id",)
-
-
-class Payment:
-    class StatusChoices(models.TextChoices):
-        PENDING = "Pending"
-        PAID = "PAID"
-
-    class TapeChoices(models.TextChoices):
-        PAYMENT = "Payment"
-        FINE = "Fine"
-
-    session_url = models.URLField
-    session = models.CharField()
-    money_to_pay = models.DecimalField(
-        validators=[MinValueValidator(0)],
-        max_digits=4,
-        decimal_places=2,
-        verbose_name="Money to pay",
-    )
-    borrowing = models.ForeignKey(Borrowing, on_delete=models.CASCADE)
-
-    class Meta:
-        order_with_respect_to = "borrowing"
