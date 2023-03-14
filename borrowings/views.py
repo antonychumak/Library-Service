@@ -5,6 +5,7 @@ from typing import Type
 
 from django.db import transaction
 from django.db.models import QuerySet
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 
@@ -52,12 +53,25 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         print("perform_create")
         serializer.save(user=self.request.user)
 
+    def get_queryset(self) -> QuerySet:
+        print("get_queryset")
+        """Only allow admin or owners of an object to edit it."""
+
+        queryset = self.queryset
+
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(user=self.request.user)
+
+        return queryset
+
     @action(
         detail=True,
         methods=["POST"],
         url_path="close_borrow",
     )
     def close_borrow(self, request, pk=None):
+        """Endpoint for closing a borrow"""
+
         print("close_borrow")
         borrow = self.get_object()
         borrow.book.inventory += 1
@@ -69,13 +83,21 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             borrow.save()
         return Response("Borrow CLOSE successfully")
 
-    def get_queryset(self) -> QuerySet:
-        print("get_queryset")
-        """Only allow admin or owners of an object to edit it."""
-
-        queryset = self.queryset
-
-        if not self.request.user.is_staff:
-            queryset = queryset.filter(user=self.request.user)
-
-        return queryset
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="is_active",
+                description="Filter by is_active field",
+                required=False,
+                type=bool,
+            ),
+            OpenApiParameter(
+                name="user_id",
+                description="Filter by user_id",
+                required=False,
+                type=int,
+            ),
+        ]
+    )
+    def list(self, request: Request, *args: tuple, **kwargs: dict) -> Response:
+        return super().list(request, *args, **kwargs)
