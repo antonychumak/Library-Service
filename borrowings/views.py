@@ -31,7 +31,6 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     filterset_fields = ["user", "is_active"]
 
     def get_serializer_class(self) -> Type[Serializer]:
-        print("get_serializer_class")
         if self.action == "list":
             return BorrowingListSerializer
 
@@ -41,20 +40,20 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         return BorrowingSerializer
 
     def create(self, request: Request, *args: tuple, **kwargs: dict) -> Response:
-        print("create View")
         serializer = self.get_serializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
-        return Response("Status: Borrow CREATE successfully")
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
 
     def perform_create(self, serializer) -> None:
-        print("perform_create")
         serializer.save(user=self.request.user)
 
     def get_queryset(self) -> QuerySet:
-        print("get_queryset")
         """Only allow admin or owners of an object to edit it."""
 
         queryset = self.queryset
@@ -72,7 +71,6 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     def close_borrow(self, request, pk=None):
         """Endpoint for closing a borrow"""
 
-        print("close_borrow")
         borrow = self.get_object()
         borrow.book.inventory += 1
         borrow.is_active = not borrow.is_active
@@ -81,7 +79,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             borrow.book.save()
             borrow.save()
-        return Response("Borrow CLOSE successfully")
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
         parameters=[

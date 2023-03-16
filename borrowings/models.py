@@ -28,7 +28,6 @@ class Borrowing(models.Model):
 
     @staticmethod
     def validate_date(expected_return_date, actual_return_date, error_to_raise) -> None:
-        print("validate MODEL")
         borrow_date = datetime.date.today()
         fourteen_days = timedelta(14)
         deadline_date = borrow_date + fourteen_days
@@ -42,13 +41,10 @@ class Borrowing(models.Model):
 
     @staticmethod
     def validate_is_active(is_active, error_to_raise) -> None:
-        print("validate is_active model")
-        print(is_active)
         if is_active:
             raise error_to_raise("Your borrowing already close")
 
     def clean(self):
-        print("clean MODEL")
         Borrowing.validate_date(
             self.expected_return_date,
             self.actual_return_date,

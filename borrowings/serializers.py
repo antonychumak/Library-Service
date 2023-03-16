@@ -1,6 +1,3 @@
-import datetime
-from datetime import timedelta
-
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -32,15 +29,12 @@ class BorrowingSerializer(serializers.ModelSerializer):
         )
         if attrs["book"].inventory <= 0:
             raise ValidationError("Book inventory is empty")
-        print("validate SERIALIZER")
-        print(attrs["is_active"])
         if not attrs["is_active"]:
             raise ValidationError("Your borrowing has been closed")
         return data
 
     @transaction.atomic()
     def create(self, validated_data: dict) -> dict:
-        print("validate create SERIALIZER")
         book = validated_data["book"]
         book.inventory -= 1
         book.save()
