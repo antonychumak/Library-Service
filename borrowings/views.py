@@ -1,3 +1,4 @@
+import asyncio
 import os
 from datetime import datetime
 from typing import Type
@@ -20,6 +21,7 @@ from borrowings.serializers import (
     BorrowingSerializer,
     BorrowingDetailSerializer,
 )
+from borrowings.telegram_bot import send_to_telegram
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
@@ -79,6 +81,14 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             borrow.book.save()
             borrow.save()
+            (
+                send_to_telegram(
+                    f"Congratulations {borrow.user.first_name} "
+                    f"you closed the borrowing of the book {borrow.book}"
+                    f" today {borrow.actual_return_date}"
+                )
+            )
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
