@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "users",
     "books",
     "borrowings",
+    # "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -175,6 +176,13 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
-#
-# TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-# TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+API_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+
+# CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# CELERY_TIMEZONE = "Europe/Kyiv"
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60
