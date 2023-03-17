@@ -7,14 +7,10 @@ from books.serializers import BookSerializer
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
-    is_active = serializers.BooleanField(default=True)
-
     class Meta:
         model = Borrowing
         fields = (
             "id",
-            "expected_return_date",
-            "actual_return_date",
             "book",
             "user",
             "is_active",
@@ -22,15 +18,10 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs: dict) -> dict:
         data = super(BorrowingSerializer, self).validate(attrs)
-        Borrowing.validate_date(
-            attrs["expected_return_date"],
-            attrs["actual_return_date"],
-            ValidationError,
-        )
+
         if attrs["book"].inventory <= 0:
             raise ValidationError("Book inventory is empty")
-        if not attrs["is_active"]:
-            raise ValidationError("Your borrowing has been closed")
+
         return data
 
     @transaction.atomic()
@@ -52,6 +43,7 @@ class BorrowingListSerializer(BorrowingSerializer):
             "id",
             "user",
             "borrow_date",
+            "expected_return_date",
             "book",
             "is_active",
         )
@@ -72,6 +64,7 @@ class BorrowingDetailSerializer(BorrowingSerializer):
             "user_email",
             "borrow_date",
             "expected_return_date",
+            "actual_return_date",
             "book",
             "is_active",
         )

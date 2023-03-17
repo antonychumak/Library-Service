@@ -43,9 +43,12 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
     def create(self, request: Request, *args: tuple, **kwargs: dict) -> Response:
         serializer = self.get_serializer(data=request.data)
-
         serializer.is_valid(raise_exception=True)
 
+        first_name_user = self.request.user.first_name
+        send_to_telegram(
+            f"Congratulations, {first_name_user}! Your book borrowing has begun"
+        )
         serializer.save()
         return Response(
             serializer.data,
@@ -70,23 +73,21 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         methods=["POST"],
         url_path="close_borrow",
     )
-    def close_borrow(self, request, pk=None):
+    def close_borrow(self, request, pk=None) -> Response:
         """Endpoint for closing a borrow"""
 
         borrow = self.get_object()
+        serializer = BorrowingSerializer(borrow, data=request.data)
         borrow.book.inventory += 1
         borrow.is_active = not borrow.is_active
-        serializer = BorrowingSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             borrow.book.save()
             borrow.save()
-            (
-                send_to_telegram(
-                    f"Congratulations {borrow.user.first_name} "
-                    f"you closed the borrowing of the book {borrow.book}"
-                    f" today {borrow.actual_return_date}"
-                )
+            send_to_telegram(
+                f"Congratulations {borrow.user.first_name}. "
+                f"We hope you liked the book '{borrow.book}'. "
+                f"Borrow closed - {borrow.actual_return_date}."
             )
 
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -20,7 +20,7 @@ class Book(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"{self.title}"
+        return self.title
 
     @staticmethod
     def validate_inventory(inventory: int, error_to_raise):
