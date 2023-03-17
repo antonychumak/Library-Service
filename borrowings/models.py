@@ -29,23 +29,20 @@ class Borrowing(models.Model):
         return f"{self.borrow_date} - {self.expected_return_date}"
 
     @staticmethod
-    def validate(actual_return_date, error_to_raise) -> None:
+    def validate(actual_return_date, is_active, error_to_raise) -> None:
         borrow_date = datetime.date.today()
         fourteen_days = timedelta(14)
         if actual_return_date:
             day_in_user = actual_return_date - borrow_date
             if day_in_user > fourteen_days:
                 raise error_to_raise("Your borrowings overdue")
-
-    @staticmethod
-    def validate_is_active(is_active, error_to_raise) -> None:
-        print("VALIDATION IN MODEL")
         if not is_active:
             raise error_to_raise("Your borrowing already close")
 
     def clean(self):
         Borrowing.validate(
             self.actual_return_date,
+            self.is_active,
             ValidationError,
         )
 

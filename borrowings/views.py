@@ -68,6 +68,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    @transaction.atomic()
     @action(
         detail=True,
         methods=["POST"],

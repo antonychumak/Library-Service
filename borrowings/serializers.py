@@ -22,6 +22,9 @@ class BorrowingSerializer(serializers.ModelSerializer):
         if attrs["book"].inventory <= 0:
             raise ValidationError("Book inventory is empty")
 
+        if not attrs["is_active"]:
+            raise ValidationError("Borrow already close")
+
         return data
 
     @transaction.atomic()
