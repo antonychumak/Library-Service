@@ -5,10 +5,18 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR app/
 
+RUN apt-get update \
+  # Additional dependencies
+  && apt-get install -y procps \
+  # cleaning up unused files
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
+
 CMD ["python", "manage.py", "runserver", "0.0.0.8000"]
 
 RUN adduser \

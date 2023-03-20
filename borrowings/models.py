@@ -4,8 +4,8 @@ from datetime import timedelta
 from django.core.exceptions import ValidationError
 from django.db import models
 
-
 from books.models import Book
+from borrowings.tasks import send_feedback_telegram_task
 from library_service import settings
 from users.models import User
 
@@ -46,15 +46,9 @@ class Borrowing(models.Model):
             ValidationError,
         )
 
-    # def borrowing_cost(self):
-    #     if self.actual_return_date == self.borrow_date:
-    #         cost_borrow = self.book.daily_fee
-    #     else:
-    #         days_in_borrow = self.actual_return_date - self.borrow_date
-    #         print(days_in_borrow)
-    #         cost_borrow = days_in_borrow.days * self.book.daily_fee
-    #         print(cost_borrow)
-    #     return cost_borrow
+    def send_warning(self):
+        if self.is_active:
+            send_feedback_telegram_task.delay(self.expected_return_date)
 
     class Meta:
         ordering = ("id",)
