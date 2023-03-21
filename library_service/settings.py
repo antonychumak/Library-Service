@@ -168,7 +168,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -195,7 +195,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BEAT_SCHEDULE = {
     "send_feedback_telegram_task": {
-        "task": "borrowing.tasks.send_feedback_telegram_task",
-        "schedule": crontab(minute="*/1"),
+        "task": "borrowings.tasks.send_feedback_telegram_task",
+        "schedule": timedelta(days=13),
     },
 }

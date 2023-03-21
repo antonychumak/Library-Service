@@ -2,7 +2,7 @@ import requests
 from django.conf import settings
 
 
-def send_to_telegram(message_for_user):
+def send_to_telegram(message_for_user: str) -> None:
     try:
         requests.post(
             settings.API_URL,

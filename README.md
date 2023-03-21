@@ -46,7 +46,7 @@ Borrowings Service:
   - POST:borrowings/ - add new borrowing (when borrow book - inventory should be made -= 1) 
   - GET:borrowings/?user_id=...&is_active=...  - get borrowings by user id and whether is borrowing still active or not.
   - GET:borrowings/<id>/  - get specific borrowing 
-  - POST:borrowings/<id>/return/ - set actual return date (inventory should be made += 1)
+  - POST:borrowings/<id>/close_borrow/ - set actual return date (inventory should be made += 1)
   - POST:borrowings/
   - Notifications Service (Telegram):
   - Notifications about new borrowing created, borrowings overdue

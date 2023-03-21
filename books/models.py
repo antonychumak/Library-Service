@@ -23,11 +23,11 @@ class Book(models.Model):
         return self.title
 
     @staticmethod
-    def validate_inventory(inventory: int, error_to_raise):
+    def validate_inventory(inventory: int, error_to_raise) -> None:
         if inventory <= 0:
             raise error_to_raise("This book is not currently available.")
 
-    def clean(self):
+    def clean(self) -> None:
         Book.validate_inventory(self.inventory, ValidationError)
 
     class Meta:
