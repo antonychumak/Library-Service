@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.utils import autoreload
 
 
-def restart_celery():
+def restart_celery() -> None:
     celery_worker_cmd = "celery -A library_service worker"
     cmd = f"pkill -f '{celery_worker_cmd}'"
     if sys.platform == "win32":
@@ -17,6 +17,6 @@ def restart_celery():
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **options):
+    def handle(self, *args: tuple, **options: dict) -> None:
         print("Starting celery worker with autoreload...")
         autoreload.run_with_reloader(restart_celery)

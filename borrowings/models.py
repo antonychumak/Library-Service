@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.template.defaultfilters import date
 
 from books.models import Book
 from borrowings.tasks import send_feedback_telegram_task
@@ -25,11 +26,11 @@ class Borrowing(models.Model):
         decimal_places=2, max_digits=4, null=True, blank=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.borrow_date} - {self.expected_return_date}"
 
     @staticmethod
-    def validate(actual_return_date, is_active, error_to_raise) -> None:
+    def validate(actual_return_date: date, is_active: bool, error_to_raise) -> None:
         borrow_date = datetime.date.today()
         fourteen_days = timedelta(14)
         if actual_return_date:
@@ -39,16 +40,16 @@ class Borrowing(models.Model):
         if not is_active:
             raise error_to_raise("Your borrowing already close")
 
-    def clean(self):
+    def clean(self) -> None:
         Borrowing.validate(
             self.actual_return_date,
             self.is_active,
             ValidationError,
         )
 
-    def send_warning(self):
+    def send_warning(self) -> None:
         if self.is_active:
-            send_feedback_telegram_task.delay(self.expected_return_date)
+            send_feedback_telegram_task.delay()
 
     class Meta:
         ordering = ("id",)
