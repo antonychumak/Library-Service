@@ -8,7 +8,6 @@ from django.template.defaultfilters import date
 from books.models import Book
 from borrowings.tasks import send_feedback_telegram_task
 from library_service import settings
-from users.models import User
 
 
 class Borrowing(models.Model):
@@ -22,9 +21,6 @@ class Borrowing(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="users"
     )
     is_active = models.BooleanField(default=False)
-    borrow_cost = models.DecimalField(
-        decimal_places=2, max_digits=4, null=True, blank=True
-    )
 
     def __str__(self) -> str:
         return f"{self.borrow_date} - {self.expected_return_date}"
