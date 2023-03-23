@@ -1,6 +1,5 @@
 from rest_framework import viewsets
 
-
 from books.models import Book
 from books.permissions import IsAdminOrReadOnly
 from books.serializers import BookSerializer

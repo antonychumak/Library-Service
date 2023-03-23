@@ -1,6 +1,4 @@
-import datetime
 from _decimal import Decimal
-
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -10,11 +8,6 @@ from rest_framework.test import APIClient
 
 from books.models import Book
 from books.serializers import BookSerializer
-from borrowings.models import Borrowing
-from borrowings.serializers import (
-    BorrowingListSerializer,
-    BorrowingDetailSerializer,
-)
 
 BOOK_URL = reverse("books:book-list")
 

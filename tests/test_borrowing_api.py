@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from books.models import Book
-
 from borrowings.models import Borrowing
 from borrowings.serializers import (
     BorrowingListSerializer,

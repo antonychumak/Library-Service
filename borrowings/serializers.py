@@ -2,8 +2,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from borrowings.models import Borrowing
 from books.serializers import BookSerializer
+from borrowings.models import Borrowing
 
 
 class BorrowingSerializer(serializers.ModelSerializer):

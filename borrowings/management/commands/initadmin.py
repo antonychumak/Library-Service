@@ -2,6 +2,7 @@ from typing import Any
 
 from django.conf import settings
 from django.core.management import BaseCommand
+
 from users.models import User
 
 
