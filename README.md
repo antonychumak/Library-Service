@@ -11,6 +11,9 @@ instructions refer to the Docker [docs](https://docs.docker.com/compose/install/
  - Activate it: ```source venv/bin/activate```
  - Create .env files in the root of the project 
  - Copy all the variables with .env.sample into .env
+ - Populate with all required data. To test functionality use: 
+   - login: admin@example.com
+   - password: mypass123
  - Bring up the docker stack: ```docker compose up --build```
  - Get access token via /api/users/token/ (set email and password for django user according to your .env file)
  - Install [ModHeader](https://chrome.google.com/webstore/detail/modheader-modify-http-hea/idgpnmonknjnojddfkpgkljpfnnfcklj?hl=en)
