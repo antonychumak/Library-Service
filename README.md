@@ -9,7 +9,8 @@ instructions refer to the Docker [docs](https://docs.docker.com/compose/install/
  - ```git clone``` https://github.com/anton-chumak-main/Library-Service.git
  - Create venv: ```python3 -m venv venv```
  - Activate it: ```source venv/bin/activate```
- - Copy .env.sample -> .env and populate with all required data
+ - Create .env files in the root of the project 
+ - Copy all the variables with .env.sample into .env
  - Bring up the docker stack: ```docker compose up --build```
  - Get access token via /api/users/token/ (set email and password for django user according to your .env file)
  - Install [ModHeader](https://chrome.google.com/webstore/detail/modheader-modify-http-hea/idgpnmonknjnojddfkpgkljpfnnfcklj?hl=en)
