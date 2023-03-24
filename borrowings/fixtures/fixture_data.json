@@ -1,0 +1,62 @@
+[
+  {
+    "model": "borrowings.borrowing",
+    "pk": 14,
+    "fields": {
+      "borrow_date": "2023-02-22",
+      "expected_return_date": "2023-03-05",
+      "actual_return_date": "2023-03-02",
+      "book": 3,
+      "user": 2,
+      "is_active": true
+    }
+  },
+  {
+    "model": "borrowings.borrowing",
+    "pk": 15,
+    "fields": {
+      "borrow_date": "2023-03-14",
+      "expected_return_date": "2023-03-28",
+      "actual_return_date": "2023-03-16",
+      "book": 4,
+      "user": 2,
+      "is_active": true
+    }
+  },
+  {
+    "model": "borrowings.borrowing",
+    "pk": 16,
+    "fields": {
+      "borrow_date": "2023-03-04",
+      "expected_return_date": "2023-03-18",
+      "actual_return_date": "2023-03-12",
+      "book": 7,
+      "user": 2,
+      "is_active": false
+    }
+  },
+  {
+    "model": "borrowings.borrowing",
+    "pk": 17,
+    "fields": {
+      "borrow_date": "2023-03-04",
+      "expected_return_date": "2023-03-18",
+      "actual_return_date": "2023-03-12",
+      "book": 2,
+      "user": 1,
+      "is_active": false
+    }
+  },
+  {
+    "model": "borrowings.borrowing",
+    "pk": 18,
+    "fields": {
+      "borrow_date": "2023-03-06",
+      "expected_return_date": "2023-03-20",
+      "actual_return_date": "2023-03-15",
+      "book": 1,
+      "user": 2,
+      "is_active": true
+    }
+  }
+]

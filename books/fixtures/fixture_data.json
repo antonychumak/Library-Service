@@ -1,0 +1,91 @@
+[
+  {
+    "model": "books.book",
+    "pk": 1,
+    "fields": {
+      "title": "It Ends With Us",
+      "author": "Colleen Hoover",
+      "cover": "Hard",
+      "inventory": 12,
+      "daily_fee": 0.99
+    }
+
+  },
+  {
+    "model": "books.book",
+    "pk": 2,
+    "fields": {
+      "title": "The 48 Laws of Power",
+      "author": "Robert Greene",
+      "cover": "Soft",
+      "inventory": 14,
+      "daily_fee": 1.49
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 3,
+    "fields": {
+      "title": "The Subtle Art of Not Giving a F*ck",
+      "author": "Mark Manson",
+      "cover": "Hard",
+      "inventory": 14,
+      "daily_fee": 1.49
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 4,
+    "fields": {
+      "title": "Rich Dad, Poor Dad",
+      "author": "Robert T. Kiyosaki, Sharon L. Lechter, Tim Wheeler",
+      "cover": "Hard",
+      "inventory": 28,
+      "daily_fee": 3.19
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 5,
+    "fields": {
+      "title": "Latidos Que No Dije",
+      "author": "Roos",
+      "cover": "Hard",
+      "inventory": 5,
+      "daily_fee": 2.89
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 6,
+    "fields": {
+      "title": "A Court of Mist and Fury",
+      "author": "Sarah J. Maas",
+      "cover": "Hard",
+      "inventory": 8,
+      "daily_fee": 4.59
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 7,
+    "fields": {
+      "title": "It Starts with Us",
+      "author": "Colleen Hoover",
+      "cover": "Soft",
+      "inventory": 7,
+      "daily_fee": 1.59
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 9,
+    "fields": {
+      "title": "Atomic Habits",
+      "author": "Marck",
+      "cover": "Hard",
+      "inventory": 2,
+      "daily_fee": 5.59
+    }
+  }
+]
